@@ -6,6 +6,7 @@ import com.empleos.model.Vacante;
 import com.empleos.service.ICategoriasService;
 import com.empleos.service.IUsuarioService;
 import com.empleos.service.IVacantesService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -99,7 +101,6 @@ public class HomeController {
         // model.addAttribute("vacantes", lista);
         return "home";
     }
-
 
 
     //pasamos con la interface Authentication como parametro para recuperar informacion del usuario
@@ -260,6 +261,22 @@ public class HomeController {
     public void initBinder(WebDataBinder binder){
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 
+    }
+
+
+    //login personalizado
+    @GetMapping("/login" )
+    public String mostrarLogin() {
+        return "formLogin";
+    }
+
+    //logout personalizado
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        SecurityContextLogoutHandler logoutHandler =
+                new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, null, null);
+        return "redirect:/login";
     }
 
 

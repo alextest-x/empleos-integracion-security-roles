@@ -39,6 +39,10 @@ public class DatabaseWebSecurity {
     }
 */
 
+    /*
+       se implementa para que spring boot reonosca nuestras tablas
+       y no tome encuenta las que spring da por defecto
+     */
     @Bean
     public UserDetailsManager authenticateUsers() {
 
@@ -73,9 +77,15 @@ public class DatabaseWebSecurity {
                         .requestMatchers("/usuarios/**").hasAnyAuthority("ADMINISTRADOR")
                          //todas ls demas URLs de la aplicacion requieren autenticacion
                         .anyRequest().authenticated()
+
                 )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                //.formLogin(Customizer.withDefaults());
+                .formLogin((form) -> form
+                    .loginPage("/login")
+                    .permitAll()
+
+        );
         return http.build();
     }
 
@@ -87,13 +97,16 @@ public class DatabaseWebSecurity {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
 
+
+
 }
 
-
+/*
 /*
 
 //error con este bean no muestra el login
@@ -119,6 +132,10 @@ public class DatabaseWebSecurity {
  */
 
 
+
+
+
+
 /*
 
     ejemplo
@@ -137,6 +154,7 @@ public class DatabaseWebSecurity {
  */
 
 /*
+
 
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
